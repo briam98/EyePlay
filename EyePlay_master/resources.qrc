@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/notas">
+        <file>resources/nota0.png</file>
+        <file>resources/nota0_azul.png</file>
+        <file>resources/nota0_oro.png</file>
+        <file>resources/nota0_rojo.png</file>
+        <file>resources/nota0_verde.png</file>
+        <file>resources/nota1.png</file>
+        <file>resources/nota1_azul.png</file>
+        <file>resources/nota1_oro.png</file>
+        <file>resources/nota1_rojo.png</file>
+        <file>resources/nota1_verde.png</file>
+        <file>resources/nota2.png</file>
+        <file>resources/nota2_azul.png</file>
+        <file>resources/nota2_oro.png</file>
+        <file>resources/nota2_rojo.png</file>
+        <file>resources/nota2_verde.png</file>
+        <file>resources/nota3.png</file>
+        <file>resources/nota3_azul.png</file>
+        <file>resources/nota3_oro.png</file>
+        <file>resources/nota3_rojo.png</file>
+        <file>resources/nota3_verde.png</file>
+        <file>resources/tambor1.png</file>
+    </qresource>
+</RCC>
