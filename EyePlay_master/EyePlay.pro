@@ -41,8 +41,7 @@ HEADERS += \
         menu.h \
         util.h
 
-FORMS += \
-        mainwindow.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -52,28 +51,3 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 INCLUDEPATH += "C:\OpenCV\OpenCV4.1.1G\include"
 LIBS += -L"C:\OpenCV\OpenCV4.1.1G\lib"\
  -llibopencv_world411
-
-DISTFILES += \
-    resources/nota0.png \
-    resources/nota0_azul.png \
-    resources/nota0_oro.png \
-    resources/nota0_rojo.png \
-    resources/nota0_verde.png \
-    resources/nota1.png \
-    resources/nota1_azul.png \
-    resources/nota1_oro.png \
-    resources/nota1_rojo.png \
-    resources/nota1_verde.png \
-    resources/nota2.png \
-    resources/nota2_azul.png \
-    resources/nota2_oro.png \
-    resources/nota2_rojo.png \
-    resources/nota2_verde.png \
-    resources/nota3.png \
-    resources/nota3_azul.png \
-    resources/nota3_oro.png \
-    resources/nota3_rojo.png \
-    resources/nota3_verde.png \
-    resources/tambor1.png
-
-RESOURCES +=
