@@ -20,6 +20,7 @@ static Point_<float> vUnitarioReceptores[NUM_RECEPTORES];
 
 static int velocidadJuego = 5;   // Aumentar para que aumente la velocidad de los emisores
 static int tiempoAparicion = 15; // Disminuir para que aumente la velocidad de aparicion
+static int TIEMPO_JUEGO = 30;
 
 static list<Emisor> listasEmisores[NUM_RECEPTORES];
 
@@ -38,6 +39,7 @@ static Mat bigImage;
 static Mat bigImageRoi;
 
 static bool primeraIteracion = true;
+static bool finJuego = false;
 
 static list<puntuacion> listaPuntuacion;
 static int puntosGlobales = 0;
@@ -181,10 +183,12 @@ void JuegoMusical::inicializarValores(Mat image) {
 
 }
 
-void JuegoMusical::iterar(Mat image, Circulo mando, int frame) {
+static int tiempoInicial;
+int JuegoMusical::iterar(Mat image, Circulo mando, int frame) {
     if (primeraIteracion) {
         inicializarValores(image);
         primeraIteracion = false;
+        tiempoInicial = clock();
     }
     if (frame % tiempoAparicion == 0) {
         int destino = rand() % 5;
@@ -198,37 +202,59 @@ void JuegoMusical::iterar(Mat image, Circulo mando, int frame) {
     //Copiamos el frame actual a uno más grande
     image.copyTo(bigImageRoi);
 
-    String stringPuntos = "Puntuacion: " + to_string(puntosGlobales);
-    putText(bigImage, stringPuntos, Point(450,510),
-            FONT_HERSHEY_DUPLEX, 0.8, Scalar(255,255,255), 1, LINE_AA);
-
-    //Pintamos los emisores en la imagen mas grande
-    for (int i = 0; i < NUM_RECEPTORES; i++) {
-        Mat destinationRoi(bigImage, arrayReceptores[i]);
-        tambor.copyTo(destinationRoi, mask_tambor);
-        circle(bigImage, centroReceptores[i], 2, colorReceptor, 1, LINE_AA, 0);
-
-        for (list<Emisor>::iterator it=listasEmisores[i].begin(); it != listasEmisores[i].end(); ++it) {
-            int px = static_cast<int>((*it).getIzqSuperior().x);
-            int py = static_cast<int>((*it).getIzqSuperior().y);
-            Rect rectDibujo;
-
-            if (px > 0 && py > 0 && px < bigImage.cols-tamEmisor) {
-                rectDibujo = Rect(px, py, (*it).getRadio()*2, (*it).getRadio()*2);
-
-                Mat destinationRoiEmisor(bigImage, rectDibujo);
-                (*it).getImagen().copyTo(destinationRoiEmisor, (*it).getImagenMask());
-            }
+    int tiempoActual = clock();
+    int tiempoPasado = (tiempoActual - tiempoInicial) / CLOCKS_PER_SEC;
+    Scalar colorTiempo = Scalar(255,255,255);
+    if (tiempoPasado >= 25) {
+        colorTiempo = Scalar(0,0,255);
+        if (tiempoPasado > 30) {
+            finJuego = true;
         }
     }
 
-    colisiones(mando);
-    moverEmisores();
-    mostrarPuntos();
+    if (!finJuego) {
+        String stringPuntos = "Puntuacion: " + to_string(puntosGlobales);
+        putText(bigImage, stringPuntos, Point(450,510),
+                FONT_HERSHEY_DUPLEX, 0.8, Scalar(255,255,255), 1, LINE_AA);
+
+        String stringTiempo = "Tiempo: " + to_string(TIEMPO_JUEGO - tiempoPasado);
+        putText(bigImage, stringTiempo, Point(60, 510),
+                FONT_HERSHEY_DUPLEX, 0.8, colorTiempo, 1, LINE_AA);
+
+        //Pintamos los emisores en la imagen mas grande
+        for (int i = 0; i < NUM_RECEPTORES; i++) {
+            Mat destinationRoi(bigImage, arrayReceptores[i]);
+            tambor.copyTo(destinationRoi, mask_tambor);
+            circle(bigImage, centroReceptores[i], 2, colorReceptor, 1, LINE_AA, 0);
+
+            for (list<Emisor>::iterator it=listasEmisores[i].begin(); it != listasEmisores[i].end(); ++it) {
+                int px = static_cast<int>((*it).getIzqSuperior().x);
+                int py = static_cast<int>((*it).getIzqSuperior().y);
+                Rect rectDibujo;
+
+                if (px > 0 && py > 0 && px < bigImage.cols-tamEmisor) {
+                    rectDibujo = Rect(px, py, (*it).getRadio()*2, (*it).getRadio()*2);
+
+                    Mat destinationRoiEmisor(bigImage, rectDibujo);
+                    (*it).getImagen().copyTo(destinationRoiEmisor, (*it).getImagenMask());
+                }
+            }
+        }
+
+        colisiones(mando);
+        moverEmisores();
+        mostrarPuntos();
+    } else {
+        String stringFinal = "Puntuacion final: " + to_string(puntosGlobales);
+        putText(bigImage, stringFinal, Point(bigImage.rows/2,bigImage.cols/2),
+                FONT_HERSHEY_DUPLEX, 1.2, Scalar(255,255,255), 1, LINE_AA);
+    }
 
     //Copiamos la parte que nos interesa de la bigImagen a imagen
     Mat imageRoi(image, Rect(0,0,image.cols,image.rows));
     bigImageRoi.copyTo(imageRoi);
+
+    return 0;
 }
 
 void JuegoMusical::inicializarImagenes() {

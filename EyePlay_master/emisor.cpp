@@ -14,7 +14,6 @@ Emisor::Emisor(Point_<float> centro, Mat imagen, Mat imagenMask, int num_nota,
 
 
 void Emisor::deleteEmisor() {
-    cout << "DELETE" << endl;
     delete(this);
 }
 

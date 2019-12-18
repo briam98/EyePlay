@@ -39,7 +39,7 @@ class JuegoMusical
 {
 public:
     JuegoMusical();
-    static void iterar(Mat image, Circulo mando, int frame);
+    static int iterar(Mat image, Circulo mando, int frame);
 private:
     static void addPuntos(Emisor* emisor, int puntos);
     static void mostrarPuntos();
